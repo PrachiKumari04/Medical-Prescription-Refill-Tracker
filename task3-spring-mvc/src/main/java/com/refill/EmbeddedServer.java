@@ -18,6 +18,7 @@ public class EmbeddedServer {
 
         String webappDir = new File("src/main/webapp").getAbsolutePath();
         StandardContext ctx = (StandardContext) tomcat.addWebapp("", webappDir);
+        ctx.setParentClassLoader(EmbeddedServer.class.getClassLoader());
         ctx.setReloadable(true);
 
         File additionWebInfClasses = new File("target/classes");
@@ -39,4 +40,3 @@ public class EmbeddedServer {
         tomcat.getServer().await();
     }
 }
-
