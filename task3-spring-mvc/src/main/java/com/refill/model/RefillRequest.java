@@ -53,3 +53,4 @@ public class RefillRequest {
     public RefillStatus getStatus() { return status; }
     public void setStatus(RefillStatus status) { this.status = status; }
 }
+

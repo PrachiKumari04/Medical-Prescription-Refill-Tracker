@@ -30,3 +30,4 @@ Set-Location "d:\MCA\sem 3\java\RefilTracker\task5-hibernate"
 - **CacheDemo**:
   - Session 1: Performs initial SQL `SELECT`, caches entity in L1 and puts into L2 cache (`puts: 1`).
   - Session 2 & Session 3: New sessions miss L1 but hit L2 cache (`hits: 2`, `SQL prepared: 1`).
+

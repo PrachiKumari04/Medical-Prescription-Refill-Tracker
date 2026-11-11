@@ -16,3 +16,4 @@ public interface PrescriptionRepository extends JpaRepository<Prescription, Inte
     @Query("select p from Prescription p join fetch p.patient where p.patient.id = :patientId order by p.id")
     List<Prescription> findByPatientId(@Param("patientId") Integer patientId);
 }
+

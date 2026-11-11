@@ -10,3 +10,4 @@ public record NewRefillRequest(
         Integer prescriptionId
 ) {
 }
+

@@ -15,3 +15,4 @@ public record RefillRow(Integer requestId,
                 + " | " + requestDate + " | " + status;
     }
 }
+

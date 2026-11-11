@@ -31,3 +31,4 @@ mvn exec:java -Dexec.mainClass="com.refill.DemoMain" -Ddb.url="jdbc:mysql://loca
 3. **Atomic Transactions (`approve`)**: Disables auto-commit (`c.setAutoCommit(false)`), locks the target row using `SELECT ... FOR UPDATE`, checks available refills, increments `refills_used` and sets status to `APPROVED`. Commits atomically or rolls back on failure (`c.rollback()`).
 4. **Batch Processing (`insertBatch`)**: Groups multiple `INSERT` statements using `ps.addBatch()` and executes them in a single round-trip using `ps.executeBatch()` within a single transaction.
 5. **Lifecycle Operations**: Demonstrates status transitions (`PENDING` -> `APPROVED` -> `COLLECTED` or `PENDING` -> `REJECTED`) and deletion.
+

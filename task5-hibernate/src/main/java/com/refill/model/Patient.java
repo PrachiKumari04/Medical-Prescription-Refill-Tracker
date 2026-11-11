@@ -49,3 +49,4 @@ public class Patient {
     public List<Prescription> getPrescriptions() { return prescriptions; }
     public void setPrescriptions(List<Prescription> prescriptions) { this.prescriptions = prescriptions; }
 }
+

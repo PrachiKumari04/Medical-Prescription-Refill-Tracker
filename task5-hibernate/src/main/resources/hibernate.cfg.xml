@@ -25,3 +25,4 @@
     <mapping class="com.refill.model.RefillRequest"/>
   </session-factory>
 </hibernate-configuration>
+

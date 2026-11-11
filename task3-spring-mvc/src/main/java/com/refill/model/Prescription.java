@@ -78,3 +78,4 @@ public class Prescription {
     public List<RefillRequest> getRequests() { return requests; }
     public void setRequests(List<RefillRequest> requests) { this.requests = requests; }
 }
+

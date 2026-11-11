@@ -45,3 +45,4 @@ Endpoints:
 5. **Server-Side Validation**:
    - `@Valid` and JSR-380 annotations (`@NotNull`, `@Min`, `@PastOrPresent`) on `RefillForm`
    - Error feedback presented in view via Spring `BindingResult`
+

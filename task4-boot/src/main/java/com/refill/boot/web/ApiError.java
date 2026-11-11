@@ -11,3 +11,4 @@ public record ApiError(Instant timestamp,
                        String message,
                        Map<String, String> fieldErrors) {
 }
+

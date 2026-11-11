@@ -42,3 +42,4 @@ CREATE TABLE app_user (
   CONSTRAINT chk_user_role CHECK (
     (role = 'PATIENT' AND patient_id IS NOT NULL) OR (role = 'PHARMACIST' AND patient_id IS NULL))
 ) ENGINE=InnoDB;
+

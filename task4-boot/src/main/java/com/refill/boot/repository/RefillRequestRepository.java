@@ -22,3 +22,4 @@ public interface RefillRequestRepository extends JpaRepository<RefillRequest, In
     @Query("select count(r) > 0 from RefillRequest r where r.prescription.id = :prescriptionId and r.status = 'PENDING'")
     boolean existsPendingForPrescription(@Param("prescriptionId") Integer prescriptionId);
 }
+

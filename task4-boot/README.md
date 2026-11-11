@@ -42,3 +42,4 @@ Import `postman/Refill_Tracker.postman_collection.json` into Postman. It covers 
   - **Identity / Auth Service** (JWT issuance and RBAC)
   - **Notification Service** (asynchronous event consumption for SMS/Email notifications)
 - Central Exception Handling implemented via `@RestControllerAdvice` emitting standardized `ApiError` JSON responses.
+

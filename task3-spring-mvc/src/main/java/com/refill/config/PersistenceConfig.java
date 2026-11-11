@@ -54,3 +54,4 @@ public class PersistenceConfig {
         return new JpaTransactionManager(emf);
     }
 }
+

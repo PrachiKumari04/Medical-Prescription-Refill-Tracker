@@ -40,3 +40,4 @@ Then open your browser and navigate to:
 3. **Views**:
    - `login.jsp`: Clean login form with error feedback and demo credentials display.
    - `refills.jsp`: Role-aware UI rendering with JSTL (`<c:choose>`, `<c:if>`, `<c:forEach>`) and `<c:out>` for XSS defense. Shows patient refill request dropdown and history, or pharmacist review/action table.
+

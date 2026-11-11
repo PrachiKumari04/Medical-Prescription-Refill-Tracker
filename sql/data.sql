@@ -35,3 +35,4 @@ INSERT INTO app_user (user_id, username, password_hash, role, patient_id) VALUES
   (3, 'sneha',   'd4587ea9ead060c13fd994f21ecfa7926272a78854a2c20136b10a3c9e53e71e', 'PATIENT', 2),
   (4, 'amit',    'd4587ea9ead060c13fd994f21ecfa7926272a78854a2c20136b10a3c9e53e71e', 'PATIENT', 3),
   (5, 'priya',   'd4587ea9ead060c13fd994f21ecfa7926272a78854a2c20136b10a3c9e53e71e', 'PATIENT', 4);
+

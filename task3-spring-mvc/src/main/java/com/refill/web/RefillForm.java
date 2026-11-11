@@ -26,3 +26,4 @@ public class RefillForm {
     public LocalDate getRequestDate() { return requestDate; }
     public void setRequestDate(LocalDate requestDate) { this.requestDate = requestDate; }
 }
+
