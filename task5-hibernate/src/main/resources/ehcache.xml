@@ -1,0 +1,17 @@
+<config xmlns="http://www.ehcache.org/v3"
+        xmlns:jsr107="http://www.ehcache.org/v3/jsr107">
+
+  <service>
+    <jsr107:defaults enable-statistics="true"/>
+  </service>
+
+  <cache alias="com.refill.model.Patient">
+    <expiry><ttl unit="minutes">60</ttl></expiry>
+    <resources><heap unit="entries">500</heap></resources>
+  </cache>
+
+  <cache alias="com.refill.model.Prescription">
+    <expiry><ttl unit="minutes">30</ttl></expiry>
+    <resources><heap unit="entries">1000</heap></resources>
+  </cache>
+</config>
