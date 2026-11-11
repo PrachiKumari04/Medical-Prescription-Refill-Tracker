@@ -79,14 +79,23 @@
           <form method="post" action="${pageContext.request.contextPath}/refills">
             <input type="hidden" name="action" value="submit">
             <label for="prescriptionId" style="font-weight: 600; display: block; font-size: 13px; margin-bottom: 6px;">Your Authorized Prescriptions:</label>
-            <select name="prescriptionId" id="prescriptionId" style="width: 100%; margin-bottom: 12px;" required>
-              <c:forEach var="p" items="${prescriptions}">
-                <option value="${p.prescriptionId}">
-                  <c:out value="${p.medicineName} ${p.dosage}"/> (<c:out value="${p.refillsRemaining}"/> of <c:out value="${p.totalRefills}"/> refills left)
-                </option>
-              </c:forEach>
-            </select>
-            <button class="btn btn-primary" type="submit">Request Prescription Refill</button>
+            <c:choose>
+              <c:when test="${not empty prescriptions}">
+                <select name="prescriptionId" id="prescriptionId" style="width: 100%; margin-bottom: 12px;" required>
+                  <c:forEach var="p" items="${prescriptions}">
+                    <option value="${p.prescriptionId}">
+                      <c:out value="${p.medicineName} ${p.dosage}"/> (<c:out value="${p.refillsRemaining}"/> of <c:out value="${p.totalRefills}"/> refills left)
+                    </option>
+                  </c:forEach>
+                </select>
+                <button class="btn btn-primary" type="submit">Request Prescription Refill</button>
+              </c:when>
+              <c:otherwise>
+                <p style="color: #64748b; font-size: 13px; background: #f8fafc; padding: 10px; border-radius: 4px; border: 1px solid #e2e8f0; margin-bottom: 0;">
+                  No active prescriptions assigned yet. You can request Over-The-Counter medicines on the right, or ask your physician (Dr. Patil) to prescribe chronic medicines for you!
+                </p>
+              </c:otherwise>
+            </c:choose>
           </form>
         </div>
 

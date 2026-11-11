@@ -26,7 +26,7 @@ public class AuthFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         String path = req.getRequestURI().substring(req.getContextPath().length());
 
-        if (path.equals("/login") || path.startsWith("/css/")) {
+        if (path.equals("/login") || path.equals("/register") || path.startsWith("/css/")) {
             chain.doFilter(request, response);
             return;
         }

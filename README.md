@@ -26,9 +26,13 @@ Get-Content "sql\schema.sql" | & "C:\Program Files\MySQL\MySQL Server 8.0\bin\my
 Get-Content "sql\data.sql"   | & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -proot
 ```
 
-### Test Accounts
-- **Pharmacist:** `username: pharma1`, `password: pharma123`
-- **Patient:** `username: ravi`, `password: patient123` (also `sneha`, `amit`, `priya`)
+### Test Accounts & User Registration
+New users can register directly at: **`http://localhost:8080/register`** (Select role: Patient, Doctor, or Pharmacist).
+
+Existing Pre-seeded Accounts:
+- **Doctor / Clinician:** `username: drpatil`, `password: doc123` (Prescribe new medicines, view patient refill histories and rejection audit trails)
+- **Pharmacist:** `username: pharma1`, `password: pharma123` (Approve/Reject requests with mandatory reason, dispense/collect medicines)
+- **Patients:** `username: ravi`, `sneha`, `amit`, `priya`, `karan`, `password: patient123` (Self-service refills & Over-The-Counter common medicines like Paracetamol up to 10 units)
 
 ---
 

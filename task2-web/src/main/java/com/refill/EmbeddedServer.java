@@ -39,6 +39,9 @@ public class EmbeddedServer {
         ctx.addServletMappingDecoded("/login", "loginServlet");
         ctx.addServletMappingDecoded("/logout", "loginServlet");
 
+        Tomcat.addServlet(ctx, "registerServlet", new com.refill.web.RegisterServlet());
+        ctx.addServletMappingDecoded("/register", "registerServlet");
+
         Tomcat.addServlet(ctx, "refillServlet", new RefillRequestServlet());
         ctx.addServletMappingDecoded("/refills", "refillServlet");
 
