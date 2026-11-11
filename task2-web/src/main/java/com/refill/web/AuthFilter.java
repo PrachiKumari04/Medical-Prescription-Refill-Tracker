@@ -16,6 +16,8 @@ import java.util.Set;
 public class AuthFilter implements Filter {
 
     private static final Set<String> PHARMACIST_ACTIONS = Set.of("approve", "reject", "collect");
+    private static final Set<String> PATIENT_ACTIONS = Set.of("submit", "submit_otc");
+    private static final Set<String> DOCTOR_ACTIONS = Set.of("prescribe");
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -25,7 +27,7 @@ public class AuthFilter implements Filter {
         String path = req.getRequestURI().substring(req.getContextPath().length());
 
         if (path.equals("/login") || path.startsWith("/css/")) {
-            chain.doFilter(request, response);            // public resources
+            chain.doFilter(request, response);
             return;
         }
 
@@ -36,16 +38,24 @@ public class AuthFilter implements Filter {
         }
         resp.setHeader("Cache-Control", "no-store");
 
+        String role = (String) session.getAttribute("role");
         if ("POST".equalsIgnoreCase(req.getMethod()) && path.equals("/refills")) {
-            boolean isPharmacist = "PHARMACIST".equals(session.getAttribute("role"));
             String action = req.getParameter("action");
-            boolean pharmacistOnly = action != null && PHARMACIST_ACTIONS.contains(action);
-            if (pharmacistOnly != isPharmacist) {
-                resp.sendError(HttpServletResponse.SC_FORBIDDEN, "This action is not allowed for your role.");
-                return;
+            if (action != null) {
+                if (PHARMACIST_ACTIONS.contains(action) && !"PHARMACIST".equals(role)) {
+                    resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Only a pharmacist can perform this action.");
+                    return;
+                }
+                if (PATIENT_ACTIONS.contains(action) && !"PATIENT".equals(role)) {
+                    resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Only a patient can submit refill requests.");
+                    return;
+                }
+                if (DOCTOR_ACTIONS.contains(action) && !"DOCTOR".equals(role)) {
+                    resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Only a doctor can prescribe medicines.");
+                    return;
+                }
             }
         }
         chain.doFilter(request, response);
     }
 }
-

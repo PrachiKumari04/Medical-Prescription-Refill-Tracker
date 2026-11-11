@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,22 +19,35 @@ import java.util.Optional;
 public class RefillRequestDAO {
 
     private static final String SELECT_BASE =
-            "SELECT r.request_id, r.prescription_id, r.request_date, r.status, "
-          + "pt.name AS patient_name, p.medicine_name, p.dosage "
+            "SELECT r.request_id, r.prescription_id, r.patient_id, r.otc_medicine, r.quantity, r.request_date, r.status, r.rejection_reason, "
+          + "COALESCE(pt.name, pt_otc.name) AS patient_name, "
+          + "p.medicine_name, p.dosage "
           + "FROM refill_request r "
-          + "JOIN prescription p ON p.prescription_id = r.prescription_id "
-          + "JOIN patient pt ON pt.patient_id = p.patient_id ";
+          + "LEFT JOIN prescription p ON p.prescription_id = r.prescription_id "
+          + "LEFT JOIN patient pt ON pt.patient_id = p.patient_id "
+          + "LEFT JOIN patient pt_otc ON pt_otc.patient_id = r.patient_id ";
 
     private static final String INSERT =
-            "INSERT INTO refill_request (prescription_id, request_date, status) VALUES (?, ?, ?)";
+            "INSERT INTO refill_request (prescription_id, patient_id, otc_medicine, quantity, request_date, status) VALUES (?, ?, ?, ?, ?, ?)";
 
     /* ---------- Create ---------- */
     public int create(RefillRequest r) throws SQLException {
         try (Connection c = DbUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, r.getPrescriptionId());
-            ps.setDate(2, Date.valueOf(r.getRequestDate()));
-            ps.setString(3, r.getStatus().name());
+            if (r.getPrescriptionId() != null) {
+                ps.setInt(1, r.getPrescriptionId());
+            } else {
+                ps.setNull(1, Types.INTEGER);
+            }
+            if (r.getPatientId() != null) {
+                ps.setInt(2, r.getPatientId());
+            } else {
+                ps.setNull(2, Types.INTEGER);
+            }
+            ps.setString(3, r.getOtcMedicine());
+            ps.setInt(4, r.getQuantity());
+            ps.setDate(5, Date.valueOf(r.getRequestDate()));
+            ps.setString(6, r.getStatus().name());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -41,6 +56,11 @@ public class RefillRequestDAO {
             }
             return r.getRequestId();
         }
+    }
+
+    public int createOTC(int patientId, String otcMedicine, int quantity, LocalDate date) throws SQLException {
+        RefillRequest r = new RefillRequest(patientId, otcMedicine, quantity, date);
+        return create(r);
     }
 
     /* ---------- Read ---------- */
@@ -65,10 +85,19 @@ public class RefillRequestDAO {
     }
 
     public List<RefillRequest> findByPatient(int patientId) throws SQLException {
-        String sql = SELECT_BASE + "WHERE p.patient_id = ? ORDER BY r.request_date DESC, r.request_id DESC";
+        String sql = SELECT_BASE + "WHERE p.patient_id = ? OR r.patient_id = ? ORDER BY r.request_date DESC, r.request_id DESC";
         try (Connection c = DbUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, patientId);
+            ps.setInt(2, patientId);
+            return collect(ps);
+        }
+    }
+
+    public List<RefillRequest> findAll() throws SQLException {
+        String sql = SELECT_BASE + "ORDER BY r.request_date DESC, r.request_id DESC";
+        try (Connection c = DbUtil.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
             return collect(ps);
         }
     }
@@ -85,35 +114,38 @@ public class RefillRequestDAO {
         }
     }
 
-    /* ---------- Update: status transitions ---------- */
-    public boolean reject(int requestId) throws SQLException {
-        return updateStatus(requestId, RefillStatus.PENDING, RefillStatus.REJECTED);
-    }
-
-    public boolean markCollected(int requestId) throws SQLException {
-        return updateStatus(requestId, RefillStatus.APPROVED, RefillStatus.COLLECTED);
-    }
-
-    private boolean updateStatus(int requestId, RefillStatus expected, RefillStatus next) throws SQLException {
-        String sql = "UPDATE refill_request SET status = ? WHERE request_id = ? AND status = ?";
+    /* ---------- Update: status transitions with reason ---------- */
+    public boolean reject(int requestId, String reason) throws SQLException {
+        String sql = "UPDATE refill_request SET status = 'REJECTED', rejection_reason = ? WHERE request_id = ? AND status = 'PENDING'";
         try (Connection c = DbUtil.getConnection();
              PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setString(1, next.name());
+            ps.setString(1, reason != null && !reason.isBlank() ? reason.trim() : "Rejected by pharmacist");
             ps.setInt(2, requestId);
-            ps.setString(3, expected.name());
             return ps.executeUpdate() > 0;
         }
     }
 
-    /* ---------- Transaction: approve + consume one refill ---------- */
+    public boolean markCollected(int requestId) throws SQLException {
+        String sql = "UPDATE refill_request SET status = 'COLLECTED' WHERE request_id = ? AND status = 'APPROVED'";
+        try (Connection c = DbUtil.getConnection();
+             PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, requestId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    /* ---------- Transaction: approve + consume one refill (or approve OTC) ---------- */
     public void approve(int requestId) throws SQLException {
         try (Connection c = DbUtil.getConnection()) {
-            c.setAutoCommit(false);                       // start of the transaction
+            c.setAutoCommit(false);
             try {
-                int prescriptionId = lockPending(c, requestId);
+                // Check if prescription_id exists
+                Integer prescriptionId = lockPending(c, requestId);
                 setStatus(c, requestId, RefillStatus.APPROVED);
-                consumeRefill(c, prescriptionId);
-                c.commit();                               // both updates or none
+                if (prescriptionId != null) {
+                    consumeRefill(c, prescriptionId);
+                }
+                c.commit();
             } catch (SQLException | RuntimeException ex) {
                 c.rollback();
                 throw ex;
@@ -123,17 +155,16 @@ public class RefillRequestDAO {
         }
     }
 
-    private static int lockPending(Connection c, int requestId) throws SQLException {
-        String sql = "SELECT prescription_id FROM refill_request "
-                   + "WHERE request_id = ? AND status = 'PENDING' FOR UPDATE";
+    private static Integer lockPending(Connection c, int requestId) throws SQLException {
+        String sql = "SELECT prescription_id FROM refill_request WHERE request_id = ? AND status = 'PENDING' FOR UPDATE";
         try (PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, requestId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) {
-                    throw new IllegalStateException(
-                            "Request " + requestId + " is not PENDING or does not exist");
+                    throw new IllegalStateException("Request " + requestId + " is not PENDING or does not exist");
                 }
-                return rs.getInt(1);
+                int pid = rs.getInt("prescription_id");
+                return rs.wasNull() ? null : pid;
             }
         }
     }
@@ -158,38 +189,6 @@ public class RefillRequestDAO {
         }
     }
 
-    /* ---------- Batch: several requests in one round trip ---------- */
-    public int[] insertBatch(List<RefillRequest> requests) throws SQLException {
-        try (Connection c = DbUtil.getConnection()) {
-            c.setAutoCommit(false);
-            try (PreparedStatement ps = c.prepareStatement(INSERT)) {
-                for (RefillRequest r : requests) {
-                    ps.setInt(1, r.getPrescriptionId());
-                    ps.setDate(2, Date.valueOf(r.getRequestDate()));
-                    ps.setString(3, r.getStatus().name());
-                    ps.addBatch();
-                }
-                int[] counts = ps.executeBatch();         // all rows, one round trip
-                c.commit();
-                return counts;
-            } catch (SQLException ex) {
-                c.rollback();
-                throw ex;
-            } finally {
-                c.setAutoCommit(true);
-            }
-        }
-    }
-
-    /* ---------- Delete ---------- */
-    public boolean delete(int requestId) throws SQLException {
-        try (Connection c = DbUtil.getConnection();
-             PreparedStatement ps = c.prepareStatement("DELETE FROM refill_request WHERE request_id = ?")) {
-            ps.setInt(1, requestId);
-            return ps.executeUpdate() > 0;
-        }
-    }
-
     /* ---------- Helpers ---------- */
     private static List<RefillRequest> collect(PreparedStatement ps) throws SQLException {
         List<RefillRequest> list = new ArrayList<>();
@@ -204,9 +203,20 @@ public class RefillRequestDAO {
     private static RefillRequest map(ResultSet rs) throws SQLException {
         RefillRequest r = new RefillRequest();
         r.setRequestId(rs.getInt("request_id"));
-        r.setPrescriptionId(rs.getInt("prescription_id"));
+        int pid = rs.getInt("prescription_id");
+        if (!rs.wasNull()) {
+            r.setPrescriptionId(pid);
+        }
+        int ptid = rs.getInt("patient_id");
+        if (!rs.wasNull()) {
+            r.setPatientId(ptid);
+        }
+        r.setOtcMedicine(rs.getString("otc_medicine"));
+        r.setQuantity(rs.getInt("quantity"));
         r.setRequestDate(rs.getDate("request_date").toLocalDate());
         r.setStatus(RefillStatus.valueOf(rs.getString("status")));
+        r.setRejectionReason(rs.getString("rejection_reason"));
+
         r.setPatientName(rs.getString("patient_name"));
         r.setMedicineName(rs.getString("medicine_name"));
         r.setDosage(rs.getString("dosage"));

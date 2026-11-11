@@ -148,3 +148,4 @@ To design, develop and deploy a Medical Prescription Refill Tracker that allows 
 3. Cosmina, I. et al., *Pro Spring 5: An In-Depth Guide to the Spring Framework*, Apress.
 4. Bauer, C., King, G. & Gregory, G., *Java Persistence with Hibernate*, Manning Publications.
 5. Oracle Corporation, *The Java Tutorials - JDBC Database Access* (docs.oracle.com/javase/tutorial).
+

@@ -4,6 +4,7 @@ public class Prescription {
 
     private int prescriptionId;
     private int patientId;
+    private String patientName;
     private String medicineName;
     private String dosage;
     private int totalRefills;
@@ -17,6 +18,9 @@ public class Prescription {
 
     public int getPatientId() { return patientId; }
     public void setPatientId(int patientId) { this.patientId = patientId; }
+
+    public String getPatientName() { return patientName; }
+    public void setPatientName(String patientName) { this.patientName = patientName; }
 
     public String getMedicineName() { return medicineName; }
     public void setMedicineName(String medicineName) { this.medicineName = medicineName; }

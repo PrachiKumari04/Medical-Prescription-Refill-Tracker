@@ -24,11 +24,16 @@ CREATE TABLE prescription (
 ) ENGINE=InnoDB;
 
 CREATE TABLE refill_request (
-  request_id      INT AUTO_INCREMENT PRIMARY KEY,
-  prescription_id INT  NOT NULL,
-  request_date    DATE NOT NULL,
-  status ENUM('PENDING','APPROVED','REJECTED','COLLECTED') NOT NULL DEFAULT 'PENDING',
+  request_id       INT AUTO_INCREMENT PRIMARY KEY,
+  prescription_id  INT NULL,
+  patient_id       INT NULL,
+  otc_medicine     VARCHAR(100) NULL,
+  quantity         INT NOT NULL DEFAULT 1,
+  request_date     DATE NOT NULL,
+  status           ENUM('PENDING','APPROVED','REJECTED','COLLECTED') NOT NULL DEFAULT 'PENDING',
+  rejection_reason VARCHAR(255) NULL,
   CONSTRAINT fk_req_presc FOREIGN KEY (prescription_id) REFERENCES prescription (prescription_id),
+  CONSTRAINT fk_req_patient FOREIGN KEY (patient_id) REFERENCES patient (patient_id),
   INDEX idx_req_status_date (status, request_date)
 ) ENGINE=InnoDB;
 
@@ -36,10 +41,10 @@ CREATE TABLE app_user (
   user_id       INT AUTO_INCREMENT PRIMARY KEY,
   username      VARCHAR(40) NOT NULL UNIQUE,
   password_hash CHAR(64)    NOT NULL,
-  role          ENUM('PATIENT','PHARMACIST') NOT NULL,
+  role          ENUM('PATIENT','PHARMACIST','DOCTOR') NOT NULL,
   patient_id    INT NULL,
   CONSTRAINT fk_user_patient FOREIGN KEY (patient_id) REFERENCES patient (patient_id),
   CONSTRAINT chk_user_role CHECK (
-    (role = 'PATIENT' AND patient_id IS NOT NULL) OR (role = 'PHARMACIST' AND patient_id IS NULL))
+    (role = 'PATIENT' AND patient_id IS NOT NULL) OR 
+    (role IN ('PHARMACIST', 'DOCTOR') AND patient_id IS NULL))
 ) ENGINE=InnoDB;
-
