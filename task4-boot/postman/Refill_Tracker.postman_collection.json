@@ -1,0 +1,156 @@
+{
+  "info": {
+    "name": "Medical Prescription Refill Tracker REST API",
+    "description": "Postman test suite for Task 4: Spring Boot RESTful Microservice.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "T4.1 - Submit Refill Request (Success 201)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"patientId\": 4,\n  \"prescriptionId\": 5\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/refills",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "refills"]
+        }
+      }
+    },
+    {
+      "name": "T4.2 - Submit Duplicate Request (Conflict 409)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"patientId\": 4,\n  \"prescriptionId\": 5\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/refills",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "refills"]
+        }
+      }
+    },
+    {
+      "name": "T4.3 - Submit Empty Request Body (Bad Request 400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/refills",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "refills"]
+        }
+      }
+    },
+    {
+      "name": "T4.4a - Pharmacist Approve Request #2 (Success 200)",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/refills/2/approve",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "refills", "2", "approve"]
+        }
+      }
+    },
+    {
+      "name": "T4.4b - Pharmacist Mark Collected Request #2 (Success 200)",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/refills/2/collect",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "refills", "2", "collect"]
+        }
+      }
+    },
+    {
+      "name": "T4.5 - Approve Request with No Refills Remaining (Conflict 409)",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/refills/3/approve",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "refills", "3", "approve"]
+        }
+      }
+    },
+    {
+      "name": "T4.6 - Get Non-Existent Request (Not Found 404)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/refills/99",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "refills", "99"]
+        }
+      }
+    },
+    {
+      "name": "List All Pending Requests",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/refills?status=PENDING",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "refills"],
+          "query": [
+            { "key": "status", "value": "PENDING" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Actuator Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/actuator/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["actuator", "health"]
+        }
+      }
+    }
+  ]
+}
