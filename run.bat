@@ -48,7 +48,7 @@ goto MENU
 :TASK2
 cls
 echo -------------------------------------------------------------------------------
-echo Starting Task 2: Jakarta Servlets + JSP Web Portal on http://localhost:8080/login
+echo Starting Task 2: Jakarta Servlets + JSP Web Portal on http://localhost:8080/
 echo Press Ctrl+C in this window to stop the server when done.
 echo -------------------------------------------------------------------------------
 cd task2-web

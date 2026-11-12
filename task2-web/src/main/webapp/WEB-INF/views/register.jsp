@@ -24,6 +24,9 @@
 </head>
 <body>
   <div class="card">
+    <div style="margin-bottom: 14px; font-size: 13px;">
+      <a href="${pageContext.request.contextPath}/" style="color: #64748b; text-decoration: none; font-weight: 500;">&larr; Back to RefillRx Home</a>
+    </div>
     <h1>Create New Account</h1>
     <div class="subtitle">Medical Prescription Refill Tracker</div>
 
@@ -56,3 +59,4 @@
   </div>
 </body>
 </html>
+

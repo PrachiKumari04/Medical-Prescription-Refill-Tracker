@@ -28,6 +28,9 @@
 </head>
 <body>
   <div class="card">
+    <div style="margin-bottom: 14px; font-size: 13px;">
+      <a href="${pageContext.request.contextPath}/" style="color: #64748b; text-decoration: none; font-weight: 500;">&larr; Back to RefillRx Home</a>
+    </div>
     <h1>Medical Prescription Refill Tracker</h1>
     
     <c:if test="${not empty sessionScope.flash}">

@@ -34,6 +34,8 @@ public class EmbeddedServer {
         }
         ctx.setResources(resources);
 
+        ctx.addWelcomeFile("index.jsp");
+
         // Explicitly register servlets and filters to ensure instant deployment
         Tomcat.addServlet(ctx, "loginServlet", new LoginServlet());
         ctx.addServletMappingDecoded("/login", "loginServlet");
