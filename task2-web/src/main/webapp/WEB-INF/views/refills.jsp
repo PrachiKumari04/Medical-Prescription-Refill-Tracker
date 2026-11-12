@@ -47,7 +47,8 @@
         (<c:out value="${sessionScope.role}"/>) &middot; <%= java.time.LocalDate.now() %>
       </div>
     </div>
-    <div>
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <a href="${pageContext.request.contextPath}/" style="font-size: 13px; color: #2563eb; text-decoration: none; font-weight: 600;">&larr; RefillRx Home</a>
       <form method="post" action="${pageContext.request.contextPath}/logout">
         <button class="btn btn-logout" type="submit">Log out</button>
       </form>

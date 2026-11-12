@@ -41,8 +41,8 @@
     </c:if>
 
     <form method="post" action="${pageContext.request.contextPath}/login">
-      <label>Username <input type="text" name="username" placeholder="e.g. drpatil, pharma1, ravi" required></label>
-      <label>Password <input type="password" name="password" placeholder="Enter password" required></label>
+      <label>Username <input type="text" id="usernameInput" name="username" value="<c:out value='${param.username}'/>" placeholder="e.g. drpatil, pharma1, ravi" required></label>
+      <label>Password <input type="password" id="passwordInput" name="password" placeholder="Enter password" required></label>
       <button class="btn-login" type="submit">Log in</button>
     </form>
 
@@ -55,11 +55,31 @@
     </div>
 
     <div class="creds">
-      <strong>Available Demo Accounts (3 Roles):</strong><br/>
-      👨‍⚕️ <span class="role-tag doctor-tag">DOCTOR</span> <code>drpatil</code> / <code>doc123</code> (Prescribe medicines, view refill analytics)<br/>
-      💊 <span class="role-tag pharma-tag">PHARMACIST</span> <code>pharma1</code> / <code>pharma123</code> (Approve/Reject with reasons, Collect)<br/>
-      🧑 <span class="role-tag patient-tag">PATIENT</span> <code>ravi</code>, <code>sneha</code>, <code>amit</code>, <code>priya</code> / <code>patient123</code> (Request Rx refills or OTC pain relievers)
+      <strong>⚡ Quick 1-Tap Login Fill (Click to populate):</strong><br/>
+      <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+        <button type="button" onclick="fillCreds('drpatil','doc123')" style="cursor:pointer; background:#e0f2fe; border:1px solid #bae6fd; color:#0369a1; padding:5px 10px; border-radius:6px; font-weight:600; font-size:12px;">👨‍⚕️ Doctor (drpatil)</button>
+        <button type="button" onclick="fillCreds('pharma1','pharma123')" style="cursor:pointer; background:#dcfce7; border:1px solid #bbf7d0; color:#15803d; padding:5px 10px; border-radius:6px; font-weight:600; font-size:12px;">💊 Pharmacist (pharma1)</button>
+        <button type="button" onclick="fillCreds('ravi','patient123')" style="cursor:pointer; background:#fef3c7; border:1px solid #fde68a; color:#b45309; padding:5px 10px; border-radius:6px; font-weight:600; font-size:12px;">🧑 Patient (ravi)</button>
+      </div>
     </div>
   </div>
+
+  <script>
+    function fillCreds(u, p) {
+      document.getElementById('usernameInput').value = u;
+      document.getElementById('passwordInput').value = p;
+    }
+    // Auto-fill password if username was passed via query parameter
+    (function() {
+      const u = document.getElementById('usernameInput').value;
+      if (u === 'drpatil') {
+        document.getElementById('passwordInput').value = 'doc123';
+      } else if (u === 'pharma1') {
+        document.getElementById('passwordInput').value = 'pharma123';
+      } else if (u === 'ravi' || u === 'sneha' || u === 'amit' || u === 'priya' || u === 'karan') {
+        document.getElementById('passwordInput').value = 'patient123';
+      }
+    })();
+  </script>
 </body>
 </html>

@@ -645,7 +645,7 @@
               <li>See exact rejection notes if an order is held</li>
             </ul>
           </div>
-          <a href="${pageContext.request.contextPath}/login" class="btn btn-ghost" style="width:100%;">Sign In as Patient &rarr;</a>
+          <a href="${pageContext.request.contextPath}/login?username=ravi" class="btn btn-ghost" style="width:100%;">Sign In as Patient &rarr;</a>
         </div>
 
         <!-- Doctor -->
@@ -660,7 +660,7 @@
               <li>Inspect pharmacy dispensing history</li>
             </ul>
           </div>
-          <a href="${pageContext.request.contextPath}/login" class="btn btn-ghost" style="width:100%;">Sign In as Doctor &rarr;</a>
+          <a href="${pageContext.request.contextPath}/login?username=drpatil" class="btn btn-ghost" style="width:100%;">Sign In as Doctor &rarr;</a>
         </div>
 
         <!-- Pharmacist -->
@@ -675,7 +675,7 @@
               <li>Mandatory rejection reasons for patient safety</li>
             </ul>
           </div>
-          <a href="${pageContext.request.contextPath}/login" class="btn btn-ghost" style="width:100%;">Sign In as Pharmacist &rarr;</a>
+          <a href="${pageContext.request.contextPath}/login?username=pharma1" class="btn btn-ghost" style="width:100%;">Sign In as Pharmacist &rarr;</a>
         </div>
       </div>
     </section>
@@ -685,21 +685,21 @@
     <div class="creds-banner">
       <div>
         <h3>⚡ Ready-to-Test Demo Accounts</h3>
-        <p>Select any role below to test the live portal immediately:</p>
+        <p>Click any card below to jump straight to login:</p>
       </div>
       <div class="creds-pills">
-        <div class="cred-pill">
+        <a href="${pageContext.request.contextPath}/login?username=drpatil" class="cred-pill" style="display:block; text-decoration:none; cursor:pointer;">
           <strong>👨‍⚕️ Doctor</strong>
           <code>drpatil</code> / <code>doc123</code>
-        </div>
-        <div class="cred-pill">
+        </a>
+        <a href="${pageContext.request.contextPath}/login?username=pharma1" class="cred-pill" style="display:block; text-decoration:none; cursor:pointer;">
           <strong>💊 Pharmacist</strong>
           <code>pharma1</code> / <code>pharma123</code>
-        </div>
-        <div class="cred-pill">
+        </a>
+        <a href="${pageContext.request.contextPath}/login?username=ravi" class="cred-pill" style="display:block; text-decoration:none; cursor:pointer;">
           <strong>🧑 Patient</strong>
           <code>ravi</code> / <code>patient123</code>
-        </div>
+        </a>
       </div>
     </div>
   </main>

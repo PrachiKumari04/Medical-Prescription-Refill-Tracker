@@ -43,7 +43,8 @@
         <span class="doctor-badge">PHYSICIAN / CLINICIAN</span> &middot; <%= java.time.LocalDate.now() %>
       </div>
     </div>
-    <div>
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <a href="${pageContext.request.contextPath}/" style="font-size: 13px; color: #0284c7; text-decoration: none; font-weight: 600;">&larr; RefillRx Home</a>
       <form method="post" action="${pageContext.request.contextPath}/logout">
         <button class="btn btn-logout" type="submit">Log out</button>
       </form>
