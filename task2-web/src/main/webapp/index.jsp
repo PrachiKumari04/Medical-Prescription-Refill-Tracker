@@ -5,42 +5,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RefillRx &bull; Medical Prescription & Refill Tracker</title>
+  <title>RefillRx &bull; Medical Prescription & Refill Portal</title>
+  
+  <!-- Premium Modern Typography: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --primary-light: #eff6ff;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #eff6ff;
       --teal: #0d9488;
-      --teal-light: #f0fdfa;
+      --teal-soft: #f0fdfa;
       --emerald: #10b981;
-      --navy: #0f172a;
+      --dark: #0f172a;
+      --dark-card: #1e293b;
       --slate: #64748b;
-      --slate-light: #f8fafc;
+      --slate-light: #f1f5f9;
       --border: #e2e8f0;
+      --border-focus: #93c5fd;
+      --bg: #f8fafc;
       --radius: 16px;
+      --radius-sm: 10px;
+      --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 10px 25px -3px rgba(15, 23, 42, 0.06), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+      --shadow-lg: 0 20px 35px -5px rgba(37, 99, 235, 0.12), 0 8px 12px -4px rgba(15, 23, 42, 0.05);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: #fafcff;
-      color: var(--navy);
-      line-height: 1.5;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
+                  radial-gradient(at 100% 0%, rgba(13, 148, 136, 0.05) 0px, transparent 50%),
+                  var(--bg);
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
       overflow-x: hidden;
     }
 
     a { text-decoration: none; color: inherit; }
 
-    /* --- NAVBAR --- */
+    /* --- UNIFIED NAVBAR --- */
     .nav {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
-      padding: 16px 36px;
+      padding: 14px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -51,14 +70,14 @@
       gap: 12px;
       font-weight: 800;
       font-size: 21px;
-      color: var(--navy);
-      letter-spacing: -0.5px;
+      letter-spacing: -0.6px;
+      color: var(--dark);
     }
-    .brand-pill {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, #2563eb, #0d9488);
-      border-radius: 10px;
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--teal));
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -66,7 +85,7 @@
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
       position: relative;
     }
-    .brand-pill::after {
+    .brand-icon::after {
       content: "";
       position: absolute;
       top: 3px;
@@ -76,41 +95,45 @@
       background: #34d399;
       border-radius: 50%;
       border: 2px solid white;
-      animation: pulse 2s infinite;
+      animation: pulseDot 2s infinite;
     }
-    @keyframes pulse {
+    @keyframes pulseDot {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.3); opacity: 0.6; }
     }
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
+
+    /* --- UNIFIED BUTTONS --- */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
       padding: 10px 22px;
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       border: none;
+      font-family: inherit;
     }
     .btn-ghost {
-      background: transparent;
-      color: var(--navy);
+      background: white;
+      color: var(--dark);
       border: 1px solid var(--border);
     }
     .btn-ghost:hover {
-      background: #f1f5f9;
+      background: var(--slate-light);
       border-color: #cbd5e1;
+      transform: translateY(-1px);
     }
     .btn-primary {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
       box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
     }
@@ -119,7 +142,7 @@
       box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
     }
     .btn-teal {
-      background: linear-gradient(135deg, #0d9488, #0f766e);
+      background: linear-gradient(135deg, var(--teal), #0f766e);
       color: white;
       box-shadow: 0 4px 14px rgba(13, 148, 136, 0.25);
     }
@@ -127,7 +150,14 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(13, 148, 136, 0.35);
     }
-    .user-tag {
+    .btn-card {
+      width: 100%;
+      padding: 11px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .user-pill {
       background: #f0fdf4;
       border: 1px solid #86efac;
       color: #166534;
@@ -135,108 +165,113 @@
       border-radius: 20px;
       font-size: 13px;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* --- HERO --- */
+    /* --- HERO SECTION --- */
     .hero {
-      max-width: 1200px;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 70px 24px 50px;
+      padding: 72px 24px 48px;
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: 1.15fr 0.85fr;
       gap: 48px;
       align-items: center;
     }
-    .pill-badge {
+    .badge-pill {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: #eff6ff;
-      color: #1d4ed8;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
       border: 1px solid #bfdbfe;
-      padding: 6px 14px;
+      padding: 6px 16px;
       border-radius: 30px;
       font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 20px;
+      font-weight: 700;
+      margin-bottom: 22px;
+      letter-spacing: -0.2px;
     }
     .hero h1 {
       font-size: 52px;
       line-height: 1.15;
       font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -1.5px;
+      color: var(--dark);
+      letter-spacing: -1.6px;
       margin-bottom: 20px;
     }
-    .hero h1 span {
-      background: linear-gradient(135deg, #2563eb, #0d9488);
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, var(--primary) 20%, var(--teal) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .hero p {
       font-size: 18px;
-      color: #475569;
+      color: var(--slate);
       line-height: 1.6;
       margin-bottom: 32px;
       max-width: 520px;
+      font-weight: 450;
     }
-    .hero-btns {
+    .hero-actions {
       display: flex;
       gap: 14px;
       flex-wrap: wrap;
       margin-bottom: 36px;
     }
 
-    /* --- HERO ANIMATED CARD --- */
-    .hero-card {
+    /* --- HERO VISUAL CARD (MODERN CLINICAL STAGE) --- */
+    .hero-stage {
       position: relative;
-      background: linear-gradient(145deg, #ffffff, #f0fdfa);
-      border: 1px solid #e2e8f0;
+      background: white;
+      border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 32px;
-      box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(0,0,0,0.05);
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    /* Floating Pill Capsules */
-    .capsule-row {
-      background: white;
-      border-radius: 16px;
-      padding: 16px 20px;
+    /* Floating Capsule Rows */
+    .capsule-card {
+      background: #ffffff;
       border: 1px solid #f1f5f9;
-      box-shadow: 0 8px 16px -2px rgba(15, 23, 42, 0.04);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      box-shadow: var(--shadow-sm);
       display: flex;
       align-items: center;
       gap: 14px;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       cursor: pointer;
     }
-    .capsule-row:hover {
+    .capsule-card:hover {
       transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.08);
-      border-color: #cbd5e1;
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-focus);
     }
-    .float-1 { animation: floatSlow 5s ease-in-out infinite; }
-    .float-2 { animation: floatSlow 5.5s ease-in-out infinite 0.8s; }
-    .float-3 { animation: floatSlow 4.8s ease-in-out infinite 1.6s; }
+    .anim-float-1 { animation: floatSlow 5.5s ease-in-out infinite; }
+    .anim-float-2 { animation: floatSlow 6s ease-in-out infinite 0.9s; }
+    .anim-float-3 { animation: floatSlow 5s ease-in-out infinite 1.8s; }
 
     @keyframes floatSlow {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-7px); }
     }
 
-    /* 3D-styled mini pill */
-    .mini-pill {
-      width: 42px;
-      height: 20px;
-      border-radius: 20px;
+    /* 3D Pill Capsule Graphic */
+    .pill-graphic {
+      width: 44px;
+      height: 22px;
+      border-radius: 22px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.7), 0 3px 6px rgba(0,0,0,0.12);
       flex-shrink: 0;
-      transform: rotate(-30deg);
+      transform: rotate(-25deg);
     }
     .pill-teal {
       background: linear-gradient(90deg, #0d9488 50%, #ffffff 50%);
@@ -251,239 +286,268 @@
       border: 1px solid #10b981;
     }
 
-    .capsule-text strong {
+    .capsule-info strong {
       display: block;
       font-size: 15px;
-      color: #0f172a;
+      color: var(--dark);
+      font-weight: 700;
     }
-    .capsule-text span {
+    .capsule-info span {
       font-size: 13px;
-      color: #64748b;
+      color: var(--slate);
     }
-    .tag {
+    .tag-pill {
       margin-left: auto;
       font-size: 12px;
       font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: -0.2px;
     }
-    .tag-green { background: #dcfce7; color: #166534; }
+    .tag-green { background: #dcfce7; color: #15803d; }
     .tag-blue { background: #e0f2fe; color: #0369a1; }
-    .tag-amber { background: #fef3c7; color: #b45309; }
 
-    /* Animated Heartbeat Line Banner */
-    .heartbeat-strip {
-      background: #0f172a;
-      color: white;
+    /* Animated Heartbeat Strip */
+    .telemetry-strip {
+      background: var(--dark);
       border-radius: 14px;
-      padding: 14px 18px;
+      padding: 14px 20px;
       display: flex;
       align-items: center;
       gap: 16px;
+      color: white;
     }
-    .ecg-wave {
+    .ecg-svg {
       width: 120px;
       height: 26px;
     }
-    .ecg-line {
+    .ecg-path {
       stroke: #34d399;
       stroke-width: 2.2;
       fill: none;
       stroke-dasharray: 180;
       stroke-dashoffset: 180;
-      animation: heartbeat 2.2s linear infinite;
+      animation: ecgPulse 2.2s linear infinite;
     }
-    @keyframes heartbeat {
+    @keyframes ecgPulse {
       0% { stroke-dashoffset: 180; }
       100% { stroke-dashoffset: 0; }
     }
-    .heartbeat-strip span {
+    .telemetry-strip span {
       font-size: 12px;
       color: #94a3b8;
     }
-    .heartbeat-strip strong {
+    .telemetry-strip strong {
       color: #34d399;
-    }
-
-    /* --- 3 SIMPLE STEPS --- */
-    .section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 60px 24px;
-    }
-    .section-title {
-      text-align: center;
-      font-size: 32px;
-      font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -0.8px;
-      margin-bottom: 12px;
-    }
-    .section-subtitle {
-      text-align: center;
-      font-size: 16px;
-      color: #64748b;
-      margin-bottom: 48px;
-    }
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-    }
-    .step-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 32px 28px;
-      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
-      transition: all 0.25s ease;
-      position: relative;
-    }
-    .step-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 16px 32px -4px rgba(15, 23, 42, 0.08);
-      border-color: #cbd5e1;
-    }
-    .step-num {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: #eff6ff;
-      color: #2563eb;
-      font-size: 18px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .step-card h3 {
-      font-size: 19px;
-      color: #0f172a;
-      margin-bottom: 10px;
       font-weight: 700;
     }
-    .step-card p {
-      font-size: 15px;
-      color: #64748b;
-      line-height: 1.6;
-    }
 
-    /* --- 3 PORTAL TILES (PATIENT, DOCTOR, PHARMACIST) --- */
+    /* --- SECTION: UNIFIED 3 ROLE TILES --- */
+    .section {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 50px 24px;
+      width: 100%;
+    }
+    .section-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+    .section-header h2 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.9px;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .section-header p {
+      font-size: 16px;
+      color: var(--slate);
+    }
     .roles-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
     }
-    .role-card {
+    .role-tile {
       background: white;
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 32px;
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: all 0.25s ease;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
-    .role-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 16px 32px -4px rgba(15, 23, 42, 0.08);
+    .role-tile:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-focus);
     }
-    .role-icon {
-      font-size: 36px;
+    .role-emoji {
+      font-size: 38px;
       margin-bottom: 16px;
+      display: inline-block;
     }
-    .role-card h3 {
+    .role-tile h3 {
       font-size: 20px;
-      color: #0f172a;
+      font-weight: 800;
+      color: var(--dark);
       margin-bottom: 8px;
-      font-weight: 700;
+      letter-spacing: -0.4px;
     }
-    .role-card p {
+    .role-tile p {
       font-size: 14px;
-      color: #64748b;
-      line-height: 1.6;
+      color: var(--slate);
+      line-height: 1.55;
       margin-bottom: 20px;
     }
-    .role-features {
+    .feature-list {
       list-style: none;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
       font-size: 13px;
       color: #334155;
     }
-    .role-features li {
-      margin-bottom: 8px;
+    .feature-list li {
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
-    .role-features li::before {
+    .feature-list li::before {
       content: "✓";
-      color: #10b981;
-      font-weight: bold;
+      color: var(--emerald);
+      font-weight: 800;
+      font-size: 14px;
     }
 
-    /* --- READY DEMO ACCOUNTS STRIP --- */
-    .creds-banner {
-      background: #0f172a;
+    /* --- QUICK DEMO STRIP --- */
+    .demo-strip {
+      background: var(--dark);
       color: white;
-      border-radius: 20px;
-      padding: 32px 36px;
-      margin: 40px auto;
-      max-width: 1200px;
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin: 20px auto 48px;
+      max-width: 1180px;
+      width: calc(100% - 48px);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 20px;
       flex-wrap: wrap;
-      gap: 24px;
     }
-    .creds-banner h3 {
-      font-size: 20px;
-      margin-bottom: 6px;
+    .demo-strip h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
     }
-    .creds-banner p {
+    .demo-strip p {
       font-size: 13px;
       color: #94a3b8;
     }
-    .creds-pills {
+    .demo-chips {
       display: flex;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
     }
-    .cred-pill {
+    .demo-chip {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 10px 16px;
+      border-radius: 10px;
+      padding: 8px 16px;
       font-size: 13px;
+      transition: all 0.2s ease;
+      display: block;
+      cursor: pointer;
     }
-    .cred-pill strong {
+    .demo-chip:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #38bdf8;
+      transform: translateY(-2px);
+    }
+    .demo-chip strong {
       color: #38bdf8;
       display: block;
       margin-bottom: 2px;
     }
-    .cred-pill code {
-      color: #f1f5f9;
-      font-family: monospace;
+    .demo-chip code {
+      color: #f8fafc;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 12px;
     }
 
-    /* --- FOOTER --- */
+    /* --- UNIFIED FOOTER --- */
     footer {
       border-top: 1px solid var(--border);
       background: white;
-      padding: 32px 24px;
+      padding: 28px 24px;
       text-align: center;
       font-size: 13px;
       color: var(--slate);
+      margin-top: auto;
     }
     footer a { color: var(--primary); font-weight: 600; }
     footer a:hover { text-decoration: underline; }
 
-    @media (max-width: 860px) {
-      .hero { grid-template-columns: 1fr; padding-top: 40px; }
-      .hero h1 { font-size: 38px; }
+    /* --- RESPONSIVE GADGET BREAKPOINTS --- */
+    /* Tablet & Medium Gadgets */
+    @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 48px;
+        gap: 36px;
+      }
+      .hero h1 { font-size: 42px; }
+      .roles-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
       .nav { padding: 14px 20px; }
-      .creds-banner { flex-direction: column; align-items: flex-start; }
+      .demo-strip {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* Mobile Phones & Small Gadgets */
+    @media (max-width: 600px) {
+      .hero {
+        padding: 36px 16px 32px;
+      }
+      .hero h1 {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+      .hero p { font-size: 16px; }
+      .hero-actions {
+        flex-direction: column;
+      }
+      .hero-actions .btn {
+        width: 100%;
+      }
+      .capsule-card {
+        padding: 12px 14px;
+      }
+      .demo-chips {
+        width: 100%;
+        flex-direction: column;
+      }
+      .demo-chip {
+        width: 100%;
+      }
+      .demo-strip {
+        width: calc(100% - 32px);
+        margin: 20px auto 32px;
+        padding: 20px;
+      }
+      .nav {
+        padding: 12px 16px;
+      }
+      .brand { font-size: 19px; }
     }
   </style>
 </head>
@@ -492,7 +556,7 @@
   <!-- NAVBAR -->
   <header class="nav">
     <a href="${pageContext.request.contextPath}/" class="brand">
-      <div class="brand-pill">
+      <div class="brand-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
           <path d="m8.5 8.5 7 7"></path>
@@ -504,8 +568,8 @@
     <div class="nav-actions">
       <c:choose>
         <c:when test="${not empty sessionScope.username}">
-          <div class="user-tag">
-            ● Signed in as <strong><c:out value="${sessionScope.username}"/></strong>
+          <div class="user-pill">
+            <span>●</span> Signed in as <strong><c:out value="${sessionScope.username}"/></strong>
           </div>
           <a href="${pageContext.request.contextPath}/refills" class="btn btn-primary">Go to Dashboard &rarr;</a>
           <form method="post" action="${pageContext.request.contextPath}/logout" style="display:inline;">
@@ -521,21 +585,21 @@
   </header>
 
 
-  <!-- HERO SECTION -->
+  <!-- HERO -->
   <main>
     <section class="hero">
       <div>
-        <div class="pill-badge">
-          ✨ Medical Prescription Refill Tracker
+        <div class="badge-pill">
+          ✨ Trusted Prescription & Refill Network
         </div>
         <h1>
-          Healthcare that <span>never misses</span> a dose.
+          Prescriptions managed with care, <span class="gradient-text">delivered on time.</span>
         </h1>
         <p>
-          Connect patients, doctors, and pharmacists in one simple workflow. Request chronic refills in seconds, order common pain relievers, and pick up on time.
+          A unified, seamless portal for patients to order refills, doctors to prescribe chronic medicines, and pharmacists to dispense with verified safety.
         </p>
 
-        <div class="hero-btns">
+        <div class="hero-actions">
           <c:choose>
             <c:when test="${not empty sessionScope.username}">
               <a href="${pageContext.request.contextPath}/refills" class="btn btn-primary" style="padding: 13px 28px; font-size: 15px;">
@@ -554,151 +618,132 @@
         </div>
       </div>
 
-      <!-- ANIMATED INTERACTIVE MEDICAL CARD -->
-      <div class="hero-card">
+      <!-- VISUAL MEDICAL CARD -->
+      <div class="hero-stage">
         <!-- Floating Pill 1 -->
-        <div class="capsule-row float-1">
-          <div class="mini-pill pill-teal"></div>
-          <div class="capsule-text">
+        <a href="${pageContext.request.contextPath}/login?username=ravi" class="capsule-card anim-float-1">
+          <div class="pill-graphic pill-teal"></div>
+          <div class="capsule-info">
             <strong>Paracetamol 500 mg</strong>
-            <span>Common OTC &bull; Pain & Fever</span>
+            <span>Over-The-Counter &bull; Pain Relief</span>
           </div>
-          <span class="tag tag-green">Instant Approve</span>
-        </div>
+          <span class="tag-pill tag-green">Instant Approve</span>
+        </a>
 
         <!-- Floating Pill 2 -->
-        <div class="capsule-row float-2">
-          <div class="mini-pill pill-blue"></div>
-          <div class="capsule-text">
+        <a href="${pageContext.request.contextPath}/login?username=drpatil" class="capsule-card anim-float-2">
+          <div class="pill-graphic pill-blue"></div>
+          <div class="capsule-info">
             <strong>Telmisartan 40 mg</strong>
             <span>Dr. Patil Authorized &bull; 6 Refills Left</span>
           </div>
-          <span class="tag tag-blue">Physician Verified</span>
-        </div>
+          <span class="tag-pill tag-blue">Physician Verified</span>
+        </a>
 
         <!-- Floating Pill 3 -->
-        <div class="capsule-row float-3">
-          <div class="mini-pill pill-green"></div>
-          <div class="capsule-text">
+        <a href="${pageContext.request.contextPath}/login?username=pharma1" class="capsule-card anim-float-3">
+          <div class="pill-graphic pill-green"></div>
+          <div class="capsule-info">
             <strong>Atorvastatin 10 mg</strong>
-            <span>Dispensed &bull; Ready for Pickup</span>
+            <span>Dispensary Counter &bull; Ready</span>
           </div>
-          <span class="tag tag-green">Ready</span>
-        </div>
+          <span class="tag-pill tag-green">Ready</span>
+        </a>
 
-        <!-- Heartbeat ECG Pulse -->
-        <div class="heartbeat-strip">
-          <svg class="ecg-wave" viewBox="0 0 120 26">
-            <path class="ecg-line" d="M0,13 L24,13 L32,4 L38,22 L44,8 L48,16 L52,13 L120,13"/>
+        <!-- Animated Telemetry Wave -->
+        <div class="telemetry-strip">
+          <svg class="ecg-svg" viewBox="0 0 120 26">
+            <path class="ecg-path" d="M0,13 L24,13 L32,4 L38,22 L44,8 L48,16 L52,13 L120,13"/>
           </svg>
           <div>
-            <strong style="display:block; font-size:13px;">Live Clinical Safeguards</strong>
-            <span>Real-time verification & zero waiting</span>
+            <strong>Live Safety Engine</strong>
+            <span style="display:block;">Real-time checks & zero waiting</span>
           </div>
         </div>
       </div>
     </section>
 
 
-    <!-- 3 SIMPLE STEPS -->
+    <!-- 3 UNIFIED ROLE CARDS -->
     <section class="section">
-      <h2 class="section-title">How It Works</h2>
-      <p class="section-subtitle">A seamless 3-step prescription loop for patients and providers.</p>
-
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-num">1</div>
-          <h3>Doctor Prescribes</h3>
-          <p>Your physician prescribes chronic medications with dosage schedules and authorized refill counts directly in the system.</p>
-        </div>
-
-        <div class="step-card">
-          <div class="step-num">2</div>
-          <h3>One-Tap Request</h3>
-          <p>Patients submit refill requests with one tap, or order common pain relievers (like Paracetamol) without booking an appointment.</p>
-        </div>
-
-        <div class="step-card">
-          <div class="step-num">3</div>
-          <h3>Pharmacist Dispenses</h3>
-          <p>The pharmacy reviews, confirms availability, and marks orders ready for counter pickup with zero confusion.</p>
-        </div>
+      <div class="section-header">
+        <h2>Choose Your Portal</h2>
+        <p>Select your clinical role to access your dedicated workspace.</p>
       </div>
-    </section>
-
-
-    <!-- 3 CLINICAL ROLES -->
-    <section class="section" style="padding-top: 10px;">
-      <h2 class="section-title">Built for Everyone</h2>
-      <p class="section-subtitle">Simple, purpose-built interfaces for each healthcare role.</p>
 
       <div class="roles-grid">
-        <!-- Patient -->
-        <div class="role-card">
+        <!-- Patient Tile -->
+        <div class="role-tile">
           <div>
-            <div class="role-icon">🧑</div>
-            <h3>For Patients</h3>
+            <span class="role-emoji">🧑</span>
+            <h3>Patient Portal</h3>
             <p>Order refills from home and get common relief medicine fast.</p>
-            <ul class="role-features">
+            <ul class="feature-list">
               <li>Track remaining refills in real-time</li>
               <li>Order OTC pain relievers (up to 10 units)</li>
-              <li>See exact rejection notes if an order is held</li>
+              <li>View clear notes if an order is held</li>
             </ul>
           </div>
-          <a href="${pageContext.request.contextPath}/login?username=ravi" class="btn btn-ghost" style="width:100%;">Sign In as Patient &rarr;</a>
+          <a href="${pageContext.request.contextPath}/login?username=ravi" class="btn btn-primary btn-card">
+            Enter as Patient &rarr;
+          </a>
         </div>
 
-        <!-- Doctor -->
-        <div class="role-card">
+        <!-- Doctor Tile -->
+        <div class="role-tile">
           <div>
-            <div class="role-icon">👨‍⚕️</div>
-            <h3>For Doctors</h3>
+            <span class="role-emoji">👨‍⚕️</span>
+            <h3>Doctor Desk</h3>
             <p>Prescribe medications and follow patient adherence effortlessly.</p>
-            <ul class="role-features">
-              <li>Prescribe new drugs to any patient in seconds</li>
-              <li>View patient refill statistics and logs</li>
-              <li>Inspect pharmacy dispensing history</li>
+            <ul class="feature-list">
+              <li>Prescribe new drugs to patients in seconds</li>
+              <li>Monitor patient refill stats & history</li>
+              <li>Inspect pharmacy dispensing audit logs</li>
             </ul>
           </div>
-          <a href="${pageContext.request.contextPath}/login?username=drpatil" class="btn btn-ghost" style="width:100%;">Sign In as Doctor &rarr;</a>
+          <a href="${pageContext.request.contextPath}/login?username=drpatil" class="btn btn-primary btn-card">
+            Enter as Doctor &rarr;
+          </a>
         </div>
 
-        <!-- Pharmacist -->
-        <div class="role-card">
+        <!-- Pharmacist Tile -->
+        <div class="role-tile">
           <div>
-            <div class="role-icon">💊</div>
-            <h3>For Pharmacists</h3>
+            <span class="role-emoji">💊</span>
+            <h3>Pharmacist Queue</h3>
             <p>Verify safety, approve refills, and dispense accurately.</p>
-            <ul class="role-features">
-              <li>Live dispensary queue with safety checks</li>
-              <li>One-click approval and collection logging</li>
-              <li>Mandatory rejection reasons for patient safety</li>
+            <ul class="feature-list">
+              <li>Live dispensary review queue</li>
+              <li>One-click approvals with atomic stock checks</li>
+              <li>Log clinical reasons when rejecting orders</li>
             </ul>
           </div>
-          <a href="${pageContext.request.contextPath}/login?username=pharma1" class="btn btn-ghost" style="width:100%;">Sign In as Pharmacist &rarr;</a>
+          <a href="${pageContext.request.contextPath}/login?username=pharma1" class="btn btn-teal btn-card">
+            Enter as Pharmacist &rarr;
+          </a>
         </div>
       </div>
     </section>
 
 
-    <!-- QUICK READY DEMO ACCOUNTS -->
-    <div class="creds-banner">
+    <!-- QUICK READY DEMO STRIP -->
+    <div class="demo-strip">
       <div>
-        <h3>⚡ Ready-to-Test Demo Accounts</h3>
-        <p>Click any card below to jump straight to login:</p>
+        <h3>⚡ 1-Click Ready Demo Logins</h3>
+        <p>Click any account below to pre-fill credentials and enter:</p>
       </div>
-      <div class="creds-pills">
-        <a href="${pageContext.request.contextPath}/login?username=drpatil" class="cred-pill" style="display:block; text-decoration:none; cursor:pointer;">
+      <div class="demo-chips">
+        <a href="${pageContext.request.contextPath}/login?username=drpatil" class="demo-chip">
           <strong>👨‍⚕️ Doctor</strong>
-          <code>drpatil</code> / <code>doc123</code>
+          <code>drpatil / doc123</code>
         </a>
-        <a href="${pageContext.request.contextPath}/login?username=pharma1" class="cred-pill" style="display:block; text-decoration:none; cursor:pointer;">
+        <a href="${pageContext.request.contextPath}/login?username=pharma1" class="demo-chip">
           <strong>💊 Pharmacist</strong>
-          <code>pharma1</code> / <code>pharma123</code>
+          <code>pharma1 / pharma123</code>
         </a>
-        <a href="${pageContext.request.contextPath}/login?username=ravi" class="cred-pill" style="display:block; text-decoration:none; cursor:pointer;">
+        <a href="${pageContext.request.contextPath}/login?username=ravi" class="demo-chip">
           <strong>🧑 Patient</strong>
-          <code>ravi</code> / <code>patient123</code>
+          <code>ravi / patient123</code>
         </a>
       </div>
     </div>
@@ -710,7 +755,7 @@
     <p>
       <strong>RefillRx</strong> &bull; Medical Prescription & Refill Tracker &bull; 
       <a href="${pageContext.request.contextPath}/login">Sign In</a> &bull; 
-      <a href="${pageContext.request.contextPath}/register">Create Account</a> &bull; 
+      <a href="${pageContext.request.contextPath}/register">Register</a> &bull; 
       <a href="https://github.com/PrachiKumari04/Medical-Prescription-Refill-Tracker" target="_blank">GitHub</a>
     </p>
   </footer>
