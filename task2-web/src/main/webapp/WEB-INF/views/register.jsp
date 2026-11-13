@@ -203,25 +203,26 @@
       </div>
 
       <label for="name">Full Name</label>
-      <input type="text" name="name" id="name" placeholder="e.g. Karan Sharma" required>
+      <input type="text" name="name" id="name" value="<c:out value='${param.name}'/>" placeholder="e.g. Karan Sharma" required>
 
       <label for="phone">Phone Number</label>
-      <input type="text" name="phone" id="phone" placeholder="e.g. 9822000005">
+      <input type="text" name="phone" id="phone" value="<c:out value='${param.phone}'/>" placeholder="e.g. 9822000005">
 
       <label for="username">Desired Username</label>
-      <input type="text" name="username" id="username" placeholder="e.g. karan" required>
+      <input type="text" name="username" id="username" value="<c:out value='${param.username}'/>" placeholder="e.g. karan" required>
 
       <label for="password">Password</label>
-      <input type="password" name="password" id="password" placeholder="At least 4 characters" required>
+      <input type="password" name="password" id="password" value="<c:out value='${param.password}'/>" placeholder="At least 4 characters" required>
 
       <label for="confirmPassword">Confirm Password</label>
-      <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Re-enter password" required>
+      <input type="password" name="confirmPassword" id="confirmPassword" value="<c:out value='${param.confirmPassword}'/>" placeholder="Re-enter password" required>
 
       <button class="btn-submit" type="submit">Register Account</button>
     </form>
 
-    <c:if test="${not empty error}">
-      <p class="error"><c:out value="${error}"/></p>
+    <c:set var="errMsg" value="${not empty error ? error : param.error}"/>
+    <c:if test="${not empty errMsg}">
+      <p class="error"><c:out value="${errMsg}"/></p>
     </c:if>
 
     <div class="footer-link">

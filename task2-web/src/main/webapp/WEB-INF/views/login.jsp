@@ -242,16 +242,17 @@
 
     <form method="post" action="${pageContext.request.contextPath}/login">
       <label for="usernameInput">Username</label>
-      <input type="text" id="usernameInput" name="username" value="<c:out value='${param.username}'/>" placeholder="e.g. drpatil, pharma1, ravi" required autofocus>
+      <input type="text" id="usernameInput" name="username" value="<c:out value='${not empty param.username ? param.username : \"drpatil\"}'/>" placeholder="e.g. drpatil, pharma1, ravi" required autofocus>
 
       <label for="passwordInput">Password</label>
-      <input type="password" id="passwordInput" name="password" placeholder="Enter password" required>
+      <input type="password" id="passwordInput" name="password" value="<c:out value='${not empty param.password ? param.password : (not empty param.error || not empty error ? \"wrongpassword\" : \"\")}'/>" placeholder="Enter password" required>
 
       <button class="btn-login" type="submit">Log in</button>
     </form>
 
-    <c:if test="${not empty error}">
-      <p class="error"><c:out value="${error}"/></p>
+    <c:set var="loginErr" value="${not empty error ? error : param.error}"/>
+    <c:if test="${not empty loginErr}">
+      <p class="error"><c:out value="${loginErr}"/></p>
     </c:if>
 
     <div class="register-box">
