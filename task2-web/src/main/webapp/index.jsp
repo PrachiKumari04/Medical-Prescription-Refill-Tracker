@@ -306,6 +306,8 @@
     }
     .tag-green { background: #dcfce7; color: #15803d; }
     .tag-blue { background: #e0f2fe; color: #0369a1; }
+    .tag-yellow { background: #fef3c7; color: #b45309; }
+    .tag-red { background: #fee2e2; color: #b91c1c; }
 
     /* Animated Heartbeat Strip */
     .telemetry-strip {
@@ -590,13 +592,13 @@
     <section class="hero">
       <div>
         <div class="badge-pill">
-          ✨ Trusted Prescription & Refill Network
+          ✨ Predictive Chronic Care & Refill Radar
         </div>
         <h1>
-          Prescriptions managed with care, <span class="gradient-text">delivered on time.</span>
+          Never run out of essential medicine, <span class="gradient-text">predicted and refilled on time.</span>
         </h1>
         <p>
-          A unified, seamless portal for patients to order refills, doctors to prescribe chronic medicines, and pharmacists to dispense with verified safety.
+          RefillRx automatically calculates when your medicine will run out based on your daily dosage. Get proactive alerts 5 days before your supply finishes, and request refills directly from your pharmacist with 1 tap.
         </p>
 
         <div class="hero-actions">
@@ -624,30 +626,30 @@
         <a href="${pageContext.request.contextPath}/login?username=ravi" class="capsule-card anim-float-1">
           <div class="pill-graphic pill-teal"></div>
           <div class="capsule-info">
-            <strong>Paracetamol 500 mg</strong>
-            <span>Over-The-Counter &bull; Pain Relief</span>
+            <strong>Metformin 500 mg</strong>
+            <span>4 Days Remaining &bull; Refill Alert Sent</span>
           </div>
-          <span class="tag-pill tag-green">Instant Approve</span>
+          <span class="tag-pill tag-yellow">Refill Due (4d)</span>
         </a>
 
         <!-- Floating Pill 2 -->
-        <a href="${pageContext.request.contextPath}/login?username=drpatil" class="capsule-card anim-float-2">
+        <a href="${pageContext.request.contextPath}/login?username=priya" class="capsule-card anim-float-2">
           <div class="pill-graphic pill-blue"></div>
           <div class="capsule-info">
-            <strong>Telmisartan 40 mg</strong>
-            <span>Dr. Patil Authorized &bull; 6 Refills Left</span>
+            <strong>Salbutamol Inhaler</strong>
+            <span>2 Days Left &bull; Urgent Refill Required</span>
           </div>
-          <span class="tag-pill tag-blue">Physician Verified</span>
+          <span class="tag-pill tag-red">Critical (2d)</span>
         </a>
 
         <!-- Floating Pill 3 -->
-        <a href="${pageContext.request.contextPath}/login?username=pharma1" class="capsule-card anim-float-3">
+        <a href="${pageContext.request.contextPath}/login?username=prachi" class="capsule-card anim-float-3">
           <div class="pill-graphic pill-green"></div>
           <div class="capsule-info">
-            <strong>Atorvastatin 10 mg</strong>
-            <span>Dispensary Counter &bull; Ready</span>
+            <strong>Atorvastatin 20 mg</strong>
+            <span>60 Days Supply &bull; Adherence On-Track</span>
           </div>
-          <span class="tag-pill tag-green">Ready</span>
+          <span class="tag-pill tag-green">Safe (60d)</span>
         </a>
 
         <!-- Animated Telemetry Wave -->
@@ -656,8 +658,8 @@
             <path class="ecg-path" d="M0,13 L24,13 L32,4 L38,22 L44,8 L48,16 L52,13 L120,13"/>
           </svg>
           <div>
-            <strong>Live Safety Engine</strong>
-            <span style="display:block;">Real-time checks & zero waiting</span>
+            <strong>Automated Exhaustion Engine</strong>
+            <span style="display:block;">Daily dose tracking & 5-day alert radar</span>
           </div>
         </div>
       </div>
