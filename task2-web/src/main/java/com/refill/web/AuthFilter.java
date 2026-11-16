@@ -15,9 +15,8 @@ import java.util.Set;
 @WebFilter("/*")
 public class AuthFilter implements Filter {
 
-    private static final Set<String> PHARMACIST_ACTIONS = Set.of("approve", "reject", "collect");
-    private static final Set<String> PATIENT_ACTIONS = Set.of("submit", "submit_otc");
-    private static final Set<String> DOCTOR_ACTIONS = Set.of("prescribe");
+    private static final Set<String> PHARMACIST_ACTIONS = Set.of("approve", "reject", "collect", "dispense", "send_alert");
+    private static final Set<String> PATIENT_ACTIONS = Set.of("submit", "submit_otc", "request_new_rx");
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -45,15 +44,11 @@ public class AuthFilter implements Filter {
             String action = req.getParameter("action");
             if (action != null) {
                 if (PHARMACIST_ACTIONS.contains(action) && !"PHARMACIST".equals(role)) {
-                    resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Only a pharmacist can perform this action.");
+                    resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Only a licensed pharmacist can perform this action.");
                     return;
                 }
                 if (PATIENT_ACTIONS.contains(action) && !"PATIENT".equals(role)) {
                     resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Only a patient can submit refill requests.");
-                    return;
-                }
-                if (DOCTOR_ACTIONS.contains(action) && !"DOCTOR".equals(role)) {
-                    resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Only a doctor can prescribe medicines.");
                     return;
                 }
             }

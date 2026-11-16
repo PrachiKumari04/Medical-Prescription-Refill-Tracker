@@ -242,7 +242,7 @@
 
     <form method="post" action="${pageContext.request.contextPath}/login">
       <label for="usernameInput">Username</label>
-      <input type="text" id="usernameInput" name="username" value="<c:out value='${not empty param.username ? param.username : \"drpatil\"}'/>" placeholder="e.g. drpatil, pharma1, ravi" required autofocus>
+      <input type="text" id="usernameInput" name="username" value="<c:out value='${not empty param.username ? param.username : \"pharma1\"}'/>" placeholder="e.g. pharma1, ravi, priya" required autofocus>
 
       <label for="passwordInput">Password</label>
       <input type="password" id="passwordInput" name="password" value="<c:out value='${not empty param.password ? param.password : (not empty param.error || not empty error ? \"wrongpassword\" : \"\")}'/>" placeholder="Enter password" required>
@@ -262,9 +262,10 @@
     <div class="creds">
       <strong>⚡ 1-Click Demo Fill:</strong>
       <div class="quick-btns">
-        <button type="button" class="quick-btn" onclick="fillCreds('drpatil','doc123')">👨‍⚕️ Doctor</button>
         <button type="button" class="quick-btn" onclick="fillCreds('pharma1','pharma123')">💊 Pharmacist</button>
-        <button type="button" class="quick-btn" onclick="fillCreds('ravi','patient123')">🧑 Patient</button>
+        <button type="button" class="quick-btn" onclick="fillCreds('ravi','patient123')">🧑 Ravi (Refill Due in 4 Days)</button>
+        <button type="button" class="quick-btn" onclick="fillCreds('priya','patient123')">🧑 Priya (Urgent in 2 Days)</button>
+        <button type="button" class="quick-btn" onclick="fillCreds('prachi','patient123')">🧑 Prachi (Safe Supply)</button>
       </div>
     </div>
   </div>
@@ -276,11 +277,9 @@
     }
     (function() {
       const u = document.getElementById('usernameInput').value;
-      if (u === 'drpatil') {
-        document.getElementById('passwordInput').value = 'doc123';
-      } else if (u === 'pharma1') {
+      if (u === 'pharma1') {
         document.getElementById('passwordInput').value = 'pharma123';
-      } else if (u === 'ravi' || u === 'sneha' || u === 'amit' || u === 'priya' || u === 'karan') {
+      } else if (u === 'ravi' || u === 'sneha' || u === 'amit' || u === 'priya' || u === 'karan' || u === 'prachi') {
         document.getElementById('passwordInput').value = 'patient123';
       }
     })();

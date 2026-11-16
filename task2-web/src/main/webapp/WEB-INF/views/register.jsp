@@ -196,9 +196,8 @@
       <label for="role">Select Your Role</label>
       <div class="role-box">
         <select name="role" id="role">
-          <option value="PATIENT" selected>🧑 Patient (Self-Service Refill Portal)</option>
-          <option value="DOCTOR">👨‍⚕️ Doctor / Clinician (Prescribe & Analytics)</option>
-          <option value="PHARMACIST">💊 Pharmacist (Review & Dispense)</option>
+          <option value="PATIENT" selected>🧑 Patient (Prescription Tracking & Refill Reminders)</option>
+          <option value="PHARMACIST">💊 Pharmacist (Exhaustion Radar & Medicine Dispensing)</option>
         </select>
       </div>
 

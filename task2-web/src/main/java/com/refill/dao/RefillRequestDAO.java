@@ -179,13 +179,20 @@ public class RefillRequestDAO {
     }
 
     private static void consumeRefill(Connection c, int prescriptionId) throws SQLException {
-        String sql = "UPDATE prescription SET refills_used = refills_used + 1 "
+        String sql = "UPDATE prescription SET refills_used = refills_used + 1, "
+                   + "dispensed_date = CURRENT_DATE, "
+                   + "exhaustion_date = DATE_ADD(CURRENT_DATE, INTERVAL days_of_supply DAY) "
                    + "WHERE prescription_id = ? AND refills_used < total_refills";
         try (PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, prescriptionId);
             if (ps.executeUpdate() == 0) {
                 throw new IllegalStateException("No refills remaining for prescription " + prescriptionId);
             }
+        }
+        try (PreparedStatement psAlert = c.prepareStatement(
+                "UPDATE refill_alert SET status = 'ACKNOWLEDGED' WHERE prescription_id = ? AND status = 'SENT'")) {
+            psAlert.setInt(1, prescriptionId);
+            psAlert.executeUpdate();
         }
     }
 

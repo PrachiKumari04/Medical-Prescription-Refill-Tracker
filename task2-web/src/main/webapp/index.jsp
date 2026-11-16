@@ -671,17 +671,18 @@
         <p>Select your clinical role to access your dedicated workspace.</p>
       </div>
 
-      <div class="roles-grid">
+      <div class="roles-grid" style="grid-template-columns: repeat(2, 1fr); max-width: 900px; margin: 0 auto;">
         <!-- Patient Tile -->
         <div class="role-tile">
           <div>
             <span class="role-emoji">🧑</span>
-            <h3>Patient Portal</h3>
-            <p>Order refills from home and get common relief medicine fast.</p>
+            <h3>Patient Adherence Portal</h3>
+            <p>Track your medicine supply countdown and never run out of critical chronic pills.</p>
             <ul class="feature-list">
-              <li>Track remaining refills in real-time</li>
-              <li>Order OTC pain relievers (up to 10 units)</li>
-              <li>View clear notes if an order is held</li>
+              <li>Live visual pill gauge & remaining dose counter</li>
+              <li>Automated refill reminder alerts when supply &le; 5 days</li>
+              <li>1-Click refill requests directly to your pharmacist</li>
+              <li>Self-service OTC common medicines (up to 10 units)</li>
             </ul>
           </div>
           <a href="${pageContext.request.contextPath}/login?username=ravi" class="btn btn-primary btn-card">
@@ -689,33 +690,17 @@
           </a>
         </div>
 
-        <!-- Doctor Tile -->
-        <div class="role-tile">
-          <div>
-            <span class="role-emoji">👨‍⚕️</span>
-            <h3>Doctor Desk</h3>
-            <p>Prescribe medications and follow patient adherence effortlessly.</p>
-            <ul class="feature-list">
-              <li>Prescribe new drugs to patients in seconds</li>
-              <li>Monitor patient refill stats & history</li>
-              <li>Inspect pharmacy dispensing audit logs</li>
-            </ul>
-          </div>
-          <a href="${pageContext.request.contextPath}/login?username=drpatil" class="btn btn-primary btn-card">
-            Enter as Doctor &rarr;
-          </a>
-        </div>
-
         <!-- Pharmacist Tile -->
         <div class="role-tile">
           <div>
             <span class="role-emoji">💊</span>
-            <h3>Pharmacist Queue</h3>
-            <p>Verify safety, approve refills, and dispense accurately.</p>
+            <h3>Pharmacist Adherence Radar</h3>
+            <p>Predict medication exhaustion dates and proactively dispatch refill alerts.</p>
             <ul class="feature-list">
-              <li>Live dispensary review queue</li>
-              <li>One-click approvals with atomic stock checks</li>
-              <li>Log clinical reasons when rejecting orders</li>
+              <li>Automated Run-Out Radar: sorted by days of supply left</li>
+              <li>1-Click proactive refill alert dispatch to patients</li>
+              <li>Dispense chronic medicines with daily consumption tracking</li>
+              <li>Instant refill queue approval with atomic countdown resets</li>
             </ul>
           </div>
           <a href="${pageContext.request.contextPath}/login?username=pharma1" class="btn btn-teal btn-card">
@@ -730,20 +715,24 @@
     <div class="demo-strip">
       <div>
         <h3>⚡ 1-Click Ready Demo Logins</h3>
-        <p>Click any account below to pre-fill credentials and enter:</p>
+        <p>Test real-world adherence scenarios with pre-configured chronic prescriptions:</p>
       </div>
       <div class="demo-chips">
-        <a href="${pageContext.request.contextPath}/login?username=drpatil" class="demo-chip">
-          <strong>👨‍⚕️ Doctor</strong>
-          <code>drpatil / doc123</code>
-        </a>
         <a href="${pageContext.request.contextPath}/login?username=pharma1" class="demo-chip">
           <strong>💊 Pharmacist</strong>
           <code>pharma1 / pharma123</code>
         </a>
         <a href="${pageContext.request.contextPath}/login?username=ravi" class="demo-chip">
-          <strong>🧑 Patient</strong>
-          <code>ravi / patient123</code>
+          <strong>🧑 Ravi (Refill Due)</strong>
+          <code>ravi / 4 Days Left</code>
+        </a>
+        <a href="${pageContext.request.contextPath}/login?username=priya" class="demo-chip">
+          <strong>🧑 Priya (Urgent)</strong>
+          <code>priya / 2 Days Left</code>
+        </a>
+        <a href="${pageContext.request.contextPath}/login?username=prachi" class="demo-chip">
+          <strong>🧑 Prachi (Safe)</strong>
+          <code>prachi / Safe Supply</code>
         </a>
       </div>
     </div>

@@ -2,6 +2,7 @@ package com.refill.web;
 
 import com.refill.dao.PatientDAO;
 import com.refill.dao.PrescriptionDAO;
+import com.refill.dao.RefillAlertDAO;
 import com.refill.dao.RefillRequestDAO;
 import com.refill.model.Prescription;
 import com.refill.model.RefillRequest;
@@ -25,13 +26,15 @@ public class RefillRequestServlet extends HttpServlet {
     private RefillRequestDAO refillDao;
     private PrescriptionDAO prescriptionDao;
     private PatientDAO patientDao;
+    private RefillAlertDAO alertDao;
 
     @Override
     public void init() {
         refillDao = new RefillRequestDAO();
         prescriptionDao = new PrescriptionDAO();
         patientDao = new PatientDAO();
-        log("RefillRequestServlet initialised with Doctor & OTC capabilities");
+        alertDao = new RefillAlertDAO();
+        log("RefillRequestServlet initialised with 2-Role Exhaustion & Adherence Engine");
     }
 
     @Override
@@ -46,28 +49,29 @@ public class RefillRequestServlet extends HttpServlet {
                 session.removeAttribute("flash");
             }
 
-            if ("DOCTOR".equals(role)) {
-                // Doctor Dashboard: Patients list, Prescriptions with live stats, Audit requests log
-                req.setAttribute("patients", patientDao.findAll());
-                req.setAttribute("prescriptions", prescriptionDao.findAllWithStats());
-                req.setAttribute("requests", refillDao.findAll());
-                req.getRequestDispatcher("/WEB-INF/views/doctor.jsp").forward(req, resp);
-                return;
-            }
-
             if ("PHARMACIST".equals(role)) {
                 RefillStatus filter = parseStatus(req.getParameter("status"));
                 req.setAttribute("filter", filter);
-                req.setAttribute("requests", refillDao.findByStatus(filter));
-            } else {
-                int patientId = (Integer) session.getAttribute("patientId");
-                req.setAttribute("requests", refillDao.findByPatient(patientId));
-                req.setAttribute("prescriptions", prescriptionDao.findByPatient(patientId));
+                req.setAttribute("requests", filter != null ? refillDao.findByStatus(filter) : refillDao.findAll());
+                req.setAttribute("adherenceRadar", prescriptionDao.findAllWithStats());
+                req.setAttribute("refillDueList", prescriptionDao.findRefillDue());
+                req.setAttribute("alerts", alertDao.findAll());
+                req.setAttribute("patients", patientDao.findAll());
+                req.setAttribute("statuses", RefillStatus.values());
+                req.getRequestDispatcher("/WEB-INF/views/pharmacist.jsp").forward(req, resp);
+                return;
             }
+
+            // PATIENT VIEW
+            int patientId = (Integer) session.getAttribute("patientId");
+            req.setAttribute("requests", refillDao.findByPatient(patientId));
+            req.setAttribute("prescriptions", prescriptionDao.findByPatient(patientId));
+            req.setAttribute("alerts", alertDao.findByPatient(patientId));
             req.setAttribute("statuses", RefillStatus.values());
             req.getRequestDispatcher("/WEB-INF/views/refills.jsp").forward(req, resp);
+
         } catch (SQLException ex) {
-            throw new ServletException("Unable to load refill data", ex);
+            throw new ServletException("Unable to load refill and adherence data", ex);
         }
     }
 
@@ -104,10 +108,12 @@ public class RefillRequestServlet extends HttpServlet {
         return switch (action) {
             case "submit" -> submitPrescriptionRefill(req, session);
             case "submit_otc" -> submitOtcDemand(req, session);
-            case "prescribe" -> prescribeNewMedicine(req, session);
+            case "request_new_rx" -> requestNewPrescription(req, session);
+            case "dispense" -> dispenseMedicationByPharmacist(req, session);
+            case "send_alert" -> sendRefillAlertByPharmacist(req, session);
             case "approve" -> {
                 refillDao.approve(requestId(req));
-                yield "Request approved.";
+                yield "Refill approved & dispensed. Exhaustion countdown reset with fresh supply.";
             }
             case "reject" -> {
                 int id = requestId(req);
@@ -119,7 +125,7 @@ public class RefillRequestServlet extends HttpServlet {
                 yield "Request #" + id + " rejected. Reason: " + reason;
             }
             case "collect" -> refillDao.markCollected(requestId(req))
-                    ? "Request marked as collected." : "Only an approved request can be collected.";
+                    ? "Medicine marked as collected by patient." : "Only an approved request can be collected.";
             default -> throw new IllegalArgumentException("Unknown action: " + action);
         };
     }
@@ -135,10 +141,10 @@ public class RefillRequestServlet extends HttpServlet {
             throw new IllegalStateException("No refills remaining on this prescription.");
         }
         if (refillDao.existsPending(prescriptionId)) {
-            throw new IllegalStateException("A refill request for this prescription is already pending.");
+            throw new IllegalStateException("A refill request for this prescription is already pending review.");
         }
         int id = refillDao.create(new RefillRequest(prescriptionId, LocalDate.now()));
-        return "Refill request #" + id + " submitted.";
+        return "Refill request #" + id + " submitted to pharmacy. The pharmacist will dispense your next supply shortly.";
     }
 
     private String submitOtcDemand(HttpServletRequest req, HttpSession session) throws SQLException {
@@ -157,31 +163,64 @@ public class RefillRequestServlet extends HttpServlet {
         if (quantity <= 0) {
             throw new IllegalStateException("Quantity must be at least 1 unit.");
         }
-        // OTC LIMIT RULE: Maximum 10 units allowed without doctor prescription
         if (quantity > 10) {
-            throw new IllegalStateException("Quantity (" + quantity + ") exceeds the over-the-counter limit (max 10 units). For higher quantities, please consult your doctor for a prescription.");
+            throw new IllegalStateException("Quantity (" + quantity + ") exceeds OTC safety threshold (max 10 units). For chronic amounts, please submit a prescription.");
         }
 
         int id = refillDao.createOTC(patientId, otcMedicine.trim(), quantity, LocalDate.now());
-        return "OTC demand for " + otcMedicine + " (Qty: " + quantity + ") submitted (#" + id + "). Pending pharmacist review.";
+        return "OTC demand for " + otcMedicine + " (Qty: " + quantity + ") submitted (#" + id + "). Pending pharmacist pickup review.";
     }
 
-    private String prescribeNewMedicine(HttpServletRequest req, HttpSession session) throws SQLException {
+    private String requestNewPrescription(HttpServletRequest req, HttpSession session) throws SQLException {
+        int patientId = (Integer) session.getAttribute("patientId");
+        String medicineName = req.getParameter("medicineName");
+        String dosage = req.getParameter("dosage");
+        String dailyDoseStr = req.getParameter("dailyDose");
+
+        if (medicineName == null || medicineName.isBlank() || dosage == null || dosage.isBlank()) {
+            throw new IllegalStateException("Medicine name and dosage instructions are mandatory.");
+        }
+        int dailyDose = 1;
+        try {
+            if (dailyDoseStr != null && !dailyDoseStr.isBlank()) {
+                dailyDose = Integer.parseInt(dailyDoseStr);
+            }
+        } catch (NumberFormatException ignored) {}
+
+        // Create prescription record with initial pending dispense
+        int prescriptionId = prescriptionDao.dispenseNew(patientId, medicineName.trim(), dosage.trim(), dailyDose, 30, 3);
+        return "New prescription for " + medicineName.trim() + " submitted to your pharmacist (#" + prescriptionId + "). 30-day initial supply recorded.";
+    }
+
+    private String dispenseMedicationByPharmacist(HttpServletRequest req, HttpSession session) throws SQLException {
         int patientId = Integer.parseInt(req.getParameter("patientId"));
         String medicineName = req.getParameter("medicineName");
         String dosage = req.getParameter("dosage");
+        int dailyDose = Integer.parseInt(req.getParameter("dailyDose"));
+        int totalQuantity = Integer.parseInt(req.getParameter("totalQuantity"));
         int totalRefills = Integer.parseInt(req.getParameter("totalRefills"));
 
         if (medicineName == null || medicineName.isBlank() || dosage == null || dosage.isBlank()) {
             throw new IllegalStateException("Medicine name and dosage are mandatory.");
         }
-        if (totalRefills < 0 || totalRefills > 24) {
-            throw new IllegalStateException("Authorized refills must be between 0 and 24.");
+        if (dailyDose <= 0 || totalQuantity <= 0) {
+            throw new IllegalStateException("Daily dosage and total quantity must be positive integers.");
         }
 
-        int prescriptionId = prescriptionDao.create(patientId, medicineName.trim(), dosage.trim(), totalRefills);
-        return "New prescription #" + prescriptionId + " (" + medicineName.trim() + " " + dosage.trim()
-                + ", " + totalRefills + " refills) successfully prescribed.";
+        int prescriptionId = prescriptionDao.dispenseNew(patientId, medicineName.trim(), dosage.trim(), dailyDose, totalQuantity, totalRefills);
+        int daysOfSupply = totalQuantity / dailyDose;
+        return "Successfully dispensed " + totalQuantity + " units of " + medicineName + " (" + daysOfSupply + " days of supply). Exhaustion forecast active.";
+    }
+
+    private String sendRefillAlertByPharmacist(HttpServletRequest req, HttpSession session) throws SQLException {
+        int prescriptionId = Integer.parseInt(req.getParameter("prescriptionId"));
+        int patientId = Integer.parseInt(req.getParameter("patientId"));
+        String medicineName = req.getParameter("medicineName");
+        long daysRemaining = Long.parseLong(req.getParameter("daysRemaining"));
+
+        String msg = "Pharmacy Reminder: Your " + medicineName + " supply has " + daysRemaining + " day(s) left. Please request your refill to avoid missing doses!";
+        alertDao.create(prescriptionId, patientId, msg);
+        return "Refill reminder alert dispatched to patient for " + medicineName + ".";
     }
 
     private static int requestId(HttpServletRequest req) {
@@ -189,13 +228,13 @@ public class RefillRequestServlet extends HttpServlet {
     }
 
     private static RefillStatus parseStatus(String value) {
-        if (value == null || value.isBlank()) {
-            return RefillStatus.PENDING;
+        if (value == null || value.isBlank() || "ALL".equalsIgnoreCase(value)) {
+            return null;
         }
         try {
             return RefillStatus.valueOf(value);
         } catch (IllegalArgumentException ex) {
-            return RefillStatus.PENDING;
+            return null;
         }
     }
 }
