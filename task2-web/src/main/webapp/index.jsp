@@ -309,22 +309,39 @@
     .tag-yellow { background: #fef3c7; color: #b45309; }
     .tag-red { background: #fee2e2; color: #b91c1c; }
 
-    /* Animated Heartbeat Strip */
+    /* Animated Heartbeat Strip - Clean Consistent Clinical Style */
     .telemetry-strip {
-      background: var(--dark);
-      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       padding: 14px 20px;
       display: flex;
       align-items: center;
       gap: 16px;
-      color: white;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+    .telemetry-strip:hover {
+      box-shadow: var(--shadow-md);
+      border-color: #cbd5e1;
+    }
+    .ecg-box {
+      width: 48px;
+      height: 48px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
     .ecg-svg {
-      width: 120px;
-      height: 26px;
+      width: 76px;
+      height: 24px;
     }
     .ecg-path {
-      stroke: #34d399;
+      stroke: #059669;
       stroke-width: 2.2;
       fill: none;
       stroke-dasharray: 180;
@@ -335,13 +352,16 @@
       0% { stroke-dashoffset: 180; }
       100% { stroke-dashoffset: 0; }
     }
+    .telemetry-strip strong {
+      display: block;
+      color: var(--dark);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
     .telemetry-strip span {
       font-size: 12px;
-      color: #94a3b8;
-    }
-    .telemetry-strip strong {
-      color: #34d399;
-      font-weight: 700;
+      color: var(--slate);
     }
 
     /* --- SECTION: UNIFIED 3 ROLE TILES --- */
@@ -426,12 +446,12 @@
       font-size: 14px;
     }
 
-    /* --- QUICK DEMO STRIP --- */
+    /* --- QUICK DEMO STRIP - Consistent Clean Clinical Style --- */
     .demo-strip {
-      background: var(--dark);
-      color: white;
+      background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+      border: 1px solid #bbf7d0;
       border-radius: var(--radius);
-      padding: 28px 32px;
+      padding: 24px 30px;
       margin: 20px auto 48px;
       max-width: 1180px;
       width: calc(100% - 48px);
@@ -440,15 +460,18 @@
       align-items: center;
       gap: 20px;
       flex-wrap: wrap;
+      box-shadow: var(--shadow-sm);
     }
     .demo-strip h3 {
       font-size: 18px;
       font-weight: 700;
+      color: var(--dark);
       margin-bottom: 4px;
+      letter-spacing: -0.3px;
     }
     .demo-strip p {
       font-size: 13px;
-      color: #94a3b8;
+      color: var(--slate);
     }
     .demo-chips {
       display: flex;
@@ -456,30 +479,37 @@
       flex-wrap: wrap;
     }
     .demo-chip {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
-      padding: 8px 16px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 18px;
       font-size: 13px;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       display: block;
       cursor: pointer;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+      color: var(--dark);
     }
     .demo-chip:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: #38bdf8;
+      background: #ffffff;
+      border-color: var(--primary);
       transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
     .demo-chip strong {
-      color: #38bdf8;
+      color: var(--dark);
+      font-weight: 700;
       display: block;
       margin-bottom: 2px;
     }
     .demo-chip code {
-      color: #f8fafc;
+      color: var(--primary);
+      background: var(--primary-soft);
+      padding: 2px 6px;
+      border-radius: 6px;
       font-family: inherit;
       font-weight: 600;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     /* --- UNIFIED FOOTER --- */
@@ -654,12 +684,14 @@
 
         <!-- Animated Telemetry Wave -->
         <div class="telemetry-strip">
-          <svg class="ecg-svg" viewBox="0 0 120 26">
-            <path class="ecg-path" d="M0,13 L24,13 L32,4 L38,22 L44,8 L48,16 L52,13 L120,13"/>
-          </svg>
+          <div class="ecg-box">
+            <svg class="ecg-svg" viewBox="0 0 120 26">
+              <path class="ecg-path" d="M0,13 L24,13 L32,4 L38,22 L44,8 L48,16 L52,13 L120,13"/>
+            </svg>
+          </div>
           <div>
             <strong>Automated Exhaustion Engine</strong>
-            <span style="display:block;">Daily dose tracking & 5-day alert radar</span>
+            <span style="display:block;">Daily dose tracking &amp; 5-day alert radar</span>
           </div>
         </div>
       </div>
