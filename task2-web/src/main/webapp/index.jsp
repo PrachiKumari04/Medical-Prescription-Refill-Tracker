@@ -172,12 +172,12 @@
 
     /* --- HERO SECTION --- */
     .hero {
-      max-width: 1180px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 72px 24px 48px;
+      padding: 64px 24px 44px;
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 48px;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
       align-items: center;
     }
     .badge-pill {
@@ -195,7 +195,7 @@
       letter-spacing: -0.2px;
     }
     .hero h1 {
-      font-size: 52px;
+      font-size: 50px;
       line-height: 1.15;
       font-weight: 800;
       color: var(--dark);
@@ -208,7 +208,7 @@
       -webkit-text-fill-color: transparent;
     }
     .hero p {
-      font-size: 18px;
+      font-size: 17px;
       color: var(--slate);
       line-height: 1.6;
       margin-bottom: 32px;
@@ -228,11 +228,12 @@
       background: white;
       border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 28px;
+      padding: 24px;
       box-shadow: var(--shadow-lg);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
+      min-width: 0;
     }
 
     /* Floating Capsule Rows */
@@ -240,13 +241,14 @@
       background: #ffffff;
       border: 1px solid #f1f5f9;
       border-radius: var(--radius);
-      padding: 16px 20px;
+      padding: 14px 18px;
       box-shadow: var(--shadow-sm);
       display: flex;
       align-items: center;
       gap: 14px;
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       cursor: pointer;
+      min-width: 0;
     }
     .capsule-card:hover {
       transform: translateY(-4px) scale(1.02);
@@ -286,23 +288,41 @@
       border: 1px solid #10b981;
     }
 
+    .capsule-info {
+      flex: 1;
+      min-width: 0;
+    }
     .capsule-info strong {
       display: block;
       font-size: 15px;
       color: var(--dark);
       font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .capsule-info span {
+      display: block;
       font-size: 13px;
       color: var(--slate);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .tag-pill {
       margin-left: auto;
       font-size: 12px;
       font-weight: 700;
-      padding: 4px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
       letter-spacing: -0.2px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.2;
     }
     .tag-green { background: #dcfce7; color: #15803d; }
     .tag-blue { background: #e0f2fe; color: #0369a1; }
@@ -314,54 +334,45 @@
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 14px 20px;
+      padding: 14px 18px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       box-shadow: var(--shadow-sm);
       transition: all 0.3s ease;
+      min-width: 0;
     }
     .telemetry-strip:hover {
       box-shadow: var(--shadow-md);
       border-color: #cbd5e1;
     }
     .ecg-box {
-      width: 48px;
-      height: 48px;
+      width: 58px;
+      height: 34px;
       background: #ecfdf5;
       border: 1px solid #a7f3d0;
-      border-radius: 12px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      padding: 0 4px;
     }
     .ecg-svg {
-      width: 76px;
-      height: 24px;
+      width: 100%;
+      height: 20px;
     }
     .ecg-path {
       stroke: #059669;
       stroke-width: 2.2;
       fill: none;
-      stroke-dasharray: 180;
-      stroke-dashoffset: 180;
-      animation: ecgPulse 2.2s linear infinite;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      animation: ecgGlow 2.5s ease-in-out infinite;
     }
-    @keyframes ecgPulse {
-      0% { stroke-dashoffset: 180; }
-      100% { stroke-dashoffset: 0; }
-    }
-    .telemetry-strip strong {
-      display: block;
-      color: var(--dark);
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: -0.2px;
-    }
-    .telemetry-strip span {
-      font-size: 12px;
-      color: var(--slate);
+    @keyframes ecgGlow {
+      0%, 100% { opacity: 0.85; }
+      50% { opacity: 1; filter: drop-shadow(0 0 2px rgba(5, 150, 105, 0.5)); }
     }
 
     /* --- SECTION: UNIFIED 3 ROLE TILES --- */
@@ -689,10 +700,11 @@
               <path class="ecg-path" d="M0,13 L24,13 L32,4 L38,22 L44,8 L48,16 L52,13 L120,13"/>
             </svg>
           </div>
-          <div>
+          <div class="capsule-info">
             <strong>Automated Exhaustion Engine</strong>
-            <span style="display:block;">Daily dose tracking &amp; 5-day alert radar</span>
+            <span>Daily dose tracking &amp; 5-day alert radar</span>
           </div>
+          <span class="tag-pill tag-green">Live Radar</span>
         </div>
       </div>
     </section>
